@@ -36,7 +36,7 @@ def new_msg():
     data = request.get_json()
     dp = updater.dispatcher
     log(data)
-    # return json.dumps(data, sort_keys=False, indent=4, separators=(',', ': ')), 200, headers
+    return json.dumps(data, sort_keys=False, indent=4, separators=(',', ': ')), 200, headers
 
 
 @app.route('/set-webhook', methods=['POST'])
