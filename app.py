@@ -44,7 +44,7 @@ def webhook():
         updater.idle()
     except PermissionError:
         log("Permission denied")
-
+    log(request.environ.get('REMOTE_PORT'))
     log(URL + TOKEN)
     return json.dumps(data, sort_keys=False, indent=4, separators=(',', ': ')), 200, headers
 
