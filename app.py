@@ -25,7 +25,8 @@ def verify():
 @app.route('/', methods=['POST'])
 def webhook():
     headers = {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "x-environment": os.environ["VERIFY_TOKEN"]
     }
     # endpoint for processing incoming messaging events
     data = request.get_json()
@@ -40,4 +41,4 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
