@@ -2,12 +2,11 @@ import os
 import sys
 import json
 from flask import Flask, request
-import logging
-import telegram
-from telegram.error import NetworkError, Unauthorized
-from time import sleep
-
-from telegram.ext import Updater
+# import logging
+# import telegram
+# from telegram.error import NetworkError, Unauthorized
+# from time import sleep
+# from telegram.ext import Updater
 
 update_id = None
 
@@ -50,11 +49,11 @@ if __name__ == '__main__':
     TOKEN = os.environ["VERIFY_TOKEN"]
     PORT = int(os.environ["PORT"])
     URL = os.environ["MY_URL"]
-    updater = Updater(TOKEN)
-    # add handlers
-    updater.start_webhook(listen="0.0.0.0",
-                          port=PORT,
-                          url_path=TOKEN)
-    updater.bot.set_webhook(URL + TOKEN)
-    updater.idle()
+#    updater = Updater(TOKEN)
+#    # add handlers
+#    updater.start_webhook(listen="0.0.0.0",
+#                          port=PORT,
+#                          url_path=TOKEN)
+#    updater.bot.set_webhook(URL + TOKEN)
+#    updater.idle()
     app.run(debug=True)
