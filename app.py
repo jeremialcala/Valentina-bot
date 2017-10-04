@@ -2,6 +2,7 @@ import os
 import sys
 import json
 from flask import Flask, request
+from telegram import Bot
 
 update_id = None
 
@@ -45,5 +46,6 @@ if __name__ == '__main__':
     PORT = int(os.environ["PORT"])
     URL = os.environ["MY_URL"]
     log(URL)
-
+    bot = Bot('TOKEN')
+    log(bot)
     app.run(debug=True)
