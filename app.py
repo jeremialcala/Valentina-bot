@@ -31,8 +31,28 @@ def webhook():
     }
     # endpoint for processing incoming messaging events
     data = request.get_json()
-    # log(json.dumps(data))
+    TOKEN = os.environ["VERIFY_TOKEN"]
+    PORT = int(os.environ["PORT"])
     URL = os.environ["MY_URL"]
+    log(URL)
+
+    updater = telegram.Updater(TOKEN)
+    updater.start_webhook(listen="0.0.0.0",
+                          port=PORT,
+                          url_path=TOKEN)
+    updater.bot.set_webhook(URL + TOKEN)
+    
+    bot = telegram.Bot(TOKEN)
+
+    try:
+        update_id = bot.get_updates()[0].update_id
+    except IndexError:
+        update_id = None
+
+    if not update_id == None:
+        log(update_id)
+
+    updater.idle()
     log(URL)
     return json.dumps(data, sort_keys=False, indent=4, separators=(',', ': ')), 200, headers
 
@@ -43,17 +63,5 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 
 if __name__ == '__main__':
-    TOKEN = os.environ["VERIFY_TOKEN"]
-    PORT = int(os.environ["PORT"])
-    URL = os.environ["MY_URL"]
-    log(URL)
-    bot = telegram.Bot(TOKEN)
-    updater = telegram.Updater(TOKEN)
-    updater.start_webhook(listen="0.0.0.0",
-                          port=PORT,
-                          url_path=TOKEN)
-    updater.bot.set_webhook(URL + TOKEN)
-    updater.idle()
-
     app.run(debug=True)
 
