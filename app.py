@@ -1,10 +1,17 @@
 import os
 import sys
 import json
-import requests
-import datetime, time
-# import telegram
 from flask import Flask, request
+import logging
+import telegram
+from telegram.error import NetworkError, Unauthorized
+from time import sleep
+
+from telegram.ext import Updater
+
+update_id = None
+
+
 
 
 app = Flask(__name__)
@@ -25,8 +32,7 @@ def verify():
 @app.route('/', methods=['POST'])
 def webhook():
     headers = {
-        "Content-Type": "application/json",
-        "x-environment": os.environ["VERIFY_TOKEN"]
+        "Content-Type": "application/json"
     }
     # endpoint for processing incoming messaging events
     data = request.get_json()
@@ -41,4 +47,14 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    TOKEN = os.environ["VERIFY_TOKEN"]
+    PORT = int(os.environ["PORT"])
+    URL = os.environ["MY_URL"]
+    updater = Updater(TOKEN)
+    # add handlers
+    updater.start_webhook(listen="0.0.0.0",
+                          port=PORT,
+                          url_path=TOKEN)
+    updater.bot.set_webhook(URL + TOKEN)
+    updater.idle()
+    app.run(debug=True)
