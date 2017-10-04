@@ -11,6 +11,38 @@ from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters, Rege
 update_id = None
 app = Flask(__name__)
 
+CHOOSING, TYPING_REPLY, TYPING_CHOICE = range(3)
+
+reply_keyboard = [['Age', 'Favourite colour'],
+                  ['Number of siblings', 'Something else...'],
+                  ['Done']]
+markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+
+
+def start(bot, update):
+    update.message.reply_text(
+        "Hi! My name is Doctor Botter. I will hold a more complex conversation with you. "
+        "Why don't you tell me something about yourself?",
+        reply_markup=markup)
+
+    return CHOOSING
+
+
+def done(bot, update, user_data):
+    if 'choice' in user_data:
+        del user_data['choice']
+
+    update.message.reply_text("I learned these facts about you:"
+                              "%s"
+                              "Until next time!" % facts_to_str(user_data))
+
+    user_data.clear()
+    return ConversationHandler.END
+
+
+def error(bot, update, error):
+    log('Update "%s" caused error "%s"' % (update, error))
+
 
 @app.route('/', methods=['GET'])
 def verify():
@@ -29,6 +61,7 @@ def new_msg():
     headers = {
         "Content-Type": "application/json"
     }
+    
     TOKEN = "347715594:AAFxTVbmmV1pLhXAmnXLd72XWnxyYxqwlvE"
     updater = Updater(TOKEN)
 
@@ -36,7 +69,25 @@ def new_msg():
     data = request.get_json()
     dp = updater.dispatcher
     log(data)
-    return json.dumps(data, sort_keys=False, indent=4, separators=(',', ': ')), 200, headers
+    conv_handler = ConversationHandler(
+        entry_points=[CommandHandler('start', start)],
+        fallbacks=[RegexHandler('^Done$', done, pass_user_data=True)]
+    )
+
+    dp.add_handler(conv_handler)
+
+    # log all errors
+    dp.add_error_handler(error)
+
+    # Start the Bot
+    updater.start_polling()
+
+    # Run the bot until you press Ctrl-C or the process receives SIGINT,
+    # SIGTERM or SIGABRT. This should be used most of the time, since
+    # start_polling() is non-blocking and will stop the bot gracefully.
+    updater.idle()
+
+    return "OK", 200, headers
 
 
 @app.route('/set-webhook', methods=['POST'])
