@@ -32,7 +32,7 @@ def webhook():
     # endpoint for processing incoming messaging events
     data = request.get_json()
     # log(json.dumps(data))
-    # URL = os.environ["MY_URL"]
+    URL = os.environ["MY_URL"]
     log(URL)
     return json.dumps(data, sort_keys=False, indent=4, separators=(',', ': ')), 200, headers
 
