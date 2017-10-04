@@ -28,11 +28,9 @@ def webhook():
         "Content-Type": "application/json"
     }
     # endpoint for processing incoming messaging events
-
     data = request.get_json()
-    log(json.dumps(data)) # you may not want to log every incoming message in production, but it's good for testing
-    # resp = requests.post("https://api.telegram.org/347715594:AAFxTVbmmV1pLhXAmnXLd72XWnxyYxqwlvE", headers=headers, data=data)
-    # log(resp.text)
+    log(json.dumps(data))
+    
     return json.dumps(data, sort_keys=False, indent=4, separators=(',', ': ')), 200, headers
 
 
