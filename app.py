@@ -7,7 +7,6 @@ import socket
 
 
 update_id = None
-port = None
 
 app = Flask(__name__)
 
@@ -29,6 +28,12 @@ def webhook():
     headers = {
         "Content-Type": "application/json"
     }
+
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.bind(('localhost', 0))
+    port = sock.getsockname()[1]
+    sock.close()
+
     # endpoint for processing incoming messaging events
     data = request.get_json()
     TOKEN = os.environ["VERIFY_TOKEN"]
@@ -52,9 +57,6 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 
 if __name__ == '__main__':
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind(('localhost', 0))
-    port = sock.getsockname()[1]
-    sock.close()
-    app.run(port=port, debug=True)
+
+    app.run(debug=True)
 
