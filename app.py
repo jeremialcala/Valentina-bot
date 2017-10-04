@@ -30,12 +30,14 @@ def webhook():
     }
     # endpoint for processing incoming messaging events
     data = request.get_json()
-    TOKEN = os.environ["VERIFY_TOKEN"]
-    URL = os.environ["MY_URL"]
+    # TOKEN = os.environ["VERIFY_TOKEN"]
+    TOKEN = "347715594:AAFxTVbmmV1pLhXAmnXLd72XWnxyYxqwlvE"
+    # URL = os.environ["MY_URL"]
+    URL = "https://valentina-bot-demo.herokuapp.com/"
     updater = Updater(TOKEN)
     # add handlers
     updater.start_webhook(listen="0.0.0.0",
-                          port=5050,
+                          port=80,
                           url_path=TOKEN)
     updater.bot.set_webhook(URL + TOKEN)
     updater.idle()
@@ -50,5 +52,5 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 if __name__ == '__main__':
 
-    app.run(port=5050, debug=True)
+    app.run(port=5050, debug=False)
 
