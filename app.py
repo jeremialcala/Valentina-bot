@@ -3,6 +3,7 @@ import sys
 import json
 from flask import Flask, request
 import telegram
+from telegram.ext import Updater
 
 update_id = None
 
@@ -36,7 +37,7 @@ def webhook():
     URL = os.environ["MY_URL"]
     log(URL)
 
-    updater = telegram.ext.Updater(TOKEN)
+    updater = Updater(TOKEN)
     updater.start_webhook(listen="0.0.0.0",
                           port=PORT,
                           url_path=TOKEN)
