@@ -23,7 +23,7 @@ def verify():
     return "Hello world", 200
 
 
-@app.route('/', methods=['POST'])
+@app.route('/set-webhook', methods=['POST'])
 def webhook():
     headers = {
         "Content-Type": "application/json"
