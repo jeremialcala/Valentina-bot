@@ -31,8 +31,9 @@ def webhook():
     }
     # endpoint for processing incoming messaging events
     data = request.get_json()
-    log(json.dumps(data))
-
+    # log(json.dumps(data))
+    # URL = os.environ["MY_URL"]
+    log(URL)
     return json.dumps(data, sort_keys=False, indent=4, separators=(',', ': ')), 200, headers
 
 
@@ -46,6 +47,13 @@ if __name__ == '__main__':
     PORT = int(os.environ["PORT"])
     URL = os.environ["MY_URL"]
     log(URL)
-    bot = telegram.Bot('TOKEN')
-    log(bot)
+    bot = telegram.Bot(TOKEN)
+    updater = telegram.Updater(TOKEN)
+    updater.start_webhook(listen="0.0.0.0",
+                          port=PORT,
+                          url_path=TOKEN)
+    updater.bot.set_webhook(URL + TOKEN)
+    updater.idle()
+
     app.run(debug=True)
+
