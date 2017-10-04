@@ -5,7 +5,6 @@ from flask import Flask, request
 from telegram.ext import Updater, CommandHandler
 import socket
 
-
 update_id = None
 
 app = Flask(__name__)
@@ -35,12 +34,17 @@ def webhook():
     # URL = os.environ["MY_URL"]
     URL = "https://valentina-bot-demo.herokuapp.com/"
     updater = Updater(TOKEN)
+
     # add handlers
-    updater.start_webhook(listen="0.0.0.0",
-                          port=80,
-                          url_path=TOKEN)
-    updater.bot.set_webhook(URL + TOKEN)
-    updater.idle()
+    try:
+        updater.start_webhook(listen="0.0.0.0",
+                              port=80,
+                              url_path=TOKEN)
+        updater.bot.set_webhook(URL + TOKEN)
+        updater.idle()
+    except PermissionError:
+        log("Permission denied")
+
     log(URL + TOKEN)
     return json.dumps(data, sort_keys=False, indent=4, separators=(',', ': ')), 200, headers
 
@@ -51,6 +55,4 @@ def log(message):  # simple wrapper for logging to stdout on heroku
 
 
 if __name__ == '__main__':
-
     app.run(port=5050, debug=False)
-
