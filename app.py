@@ -2,12 +2,9 @@ import os
 import sys
 import json
 from flask import Flask, request
-import telegram
-from telegram.ext import Updater
+
 
 update_id = None
-
-
 
 
 app = Flask(__name__)
@@ -35,25 +32,7 @@ def webhook():
     TOKEN = os.environ["VERIFY_TOKEN"]
     PORT = int(os.environ["PORT"])
     URL = os.environ["MY_URL"]
-    log(URL)
 
-    updater = Updater(TOKEN)
-    updater.start_webhook(listen="0.0.0.0",
-                          port=PORT,
-                          url_path=TOKEN)
-    updater.bot.set_webhook(URL + TOKEN)
-
-    bot = telegram.Bot(TOKEN)
-
-    try:
-        update_id = bot.get_updates()[0].update_id
-    except IndexError:
-        update_id = None
-
-    if not update_id == None:
-        log(update_id)
-
-    updater.idle()
     log(URL)
     return json.dumps(data, sort_keys=False, indent=4, separators=(',', ': ')), 200, headers
 
