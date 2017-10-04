@@ -36,12 +36,12 @@ def webhook():
     URL = os.environ["MY_URL"]
     log(URL)
 
-    updater = telegram.Updater(TOKEN)
+    updater = telegram.ext.Updater(TOKEN)
     updater.start_webhook(listen="0.0.0.0",
                           port=PORT,
                           url_path=TOKEN)
     updater.bot.set_webhook(URL + TOKEN)
-    
+
     bot = telegram.Bot(TOKEN)
 
     try:
