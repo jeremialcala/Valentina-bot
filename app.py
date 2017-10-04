@@ -30,7 +30,7 @@ def new_msg():
 
     # endpoint for processing incoming messaging events
     data = request.get_json()
-    log(json.dumps(data, sort_keys=False, indent=4, separators=(',', ': ')))
+    log(data)
     return json.dumps(data, sort_keys=False, indent=4, separators=(',', ': ')), 200, headers
 
 
