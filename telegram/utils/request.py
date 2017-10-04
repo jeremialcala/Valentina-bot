@@ -31,10 +31,10 @@ except ImportError:
 import certifi
 
 try:
-    import telegram.vendor.ptb_urllib3.urllib3 as urllib3
+    import urllib3
     import telegram.vendor.ptb_urllib3.urllib3.contrib.appengine as appengine
-    from telegram.vendor.ptb_urllib3.urllib3.connection import HTTPConnection
-    from telegram.vendor.ptb_urllib3.urllib3.util.timeout import Timeout
+    from urllib3.connection import HTTPConnection
+    from urllib3.util.timeout import Timeout
 except ImportError:  # pragma: no cover
     warnings.warn("python-telegram-bot wasn't properly installed. Please refer to README.rst on "
                   "how to properly install.")
