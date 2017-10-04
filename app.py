@@ -2,12 +2,26 @@ import os
 import sys
 import json
 from flask import Flask, request
+import telegram
 from telegram.ext import Updater, CommandHandler
+from telegram.error import NetworkError, Unauthorized
+from time import sleep
 import socket
 
 update_id = None
 
 app = Flask(__name__)
+
+
+def echo(bot):
+    global update_id
+    # Request updates after the last update_id
+    for update in bot.get_updates(offset=update_id, timeout=10):
+        update_id = update.update_id + 1
+
+        if update.message:  # your bot can receive updates without messages
+            # Reply to the message
+            update.message.reply_text(update.message.text)
 
 
 @app.route('/', methods=['GET'])
@@ -27,11 +41,28 @@ def new_msg():
     headers = {
         "Content-Type": "application/json"
     }
+    TOKEN = "347715594:AAFxTVbmmV1pLhXAmnXLd72XWnxyYxqwlvE"
+    bot = telegram.Bot(TOKEN)
 
     # endpoint for processing incoming messaging events
     data = request.get_json()
+
+    try:
+        update_id = bot.get_updates()[0].update_id
+    except IndexError:
+        update_id = None
+
     log(data)
-    return json.dumps(data, sort_keys=False, indent=4, separators=(',', ': ')), 200, headers
+
+    while True:
+        try:
+            echo(bot)
+        except NetworkError:
+            sleep(1)
+        except Unauthorized:
+            # The user has removed or blocked the bot.
+            update_id += 1
+    # return json.dumps(data, sort_keys=False, indent=4, separators=(',', ': ')), 200, headers
 
 
 @app.route('/set-webhook', methods=['POST'])
