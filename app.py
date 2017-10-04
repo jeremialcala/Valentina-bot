@@ -22,6 +22,18 @@ def verify():
     return "Hello world", 200
 
 
+@app.route('/', methods=['POST'])
+def new_msg():
+    headers = {
+        "Content-Type": "application/json"
+    }
+
+    # endpoint for processing incoming messaging events
+    data = request.get_json()
+    log(json.dumps(data, sort_keys=False, indent=4, separators=(',', ': ')))
+    return json.dumps(data, sort_keys=False, indent=4, separators=(',', ': ')), 200, headers
+
+
 @app.route('/set-webhook', methods=['POST'])
 def webhook():
     headers = {
