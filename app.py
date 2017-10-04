@@ -22,7 +22,7 @@ def verify():
     return "Hello world", 200
 
 
-@app.route('/', methods=['POST'])
+@app.route('/347715594:AAFxTVbmmV1pLhXAmnXLd72XWnxyYxqwlvE', methods=['POST'])
 def new_msg():
     headers = {
         "Content-Type": "application/json"
